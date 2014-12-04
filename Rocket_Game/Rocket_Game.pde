@@ -155,6 +155,7 @@ void mousePressed() {
         }
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
+        frameCount = 0;
         titleScreen = true;
         classicMode = false;
         counter = 0;
@@ -177,6 +178,7 @@ void mousePressed() {
         counter++;
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
+        frameCount = 0;
         titleScreen = true;
         classicMode = false;
         counter = 0;
@@ -205,6 +207,7 @@ void mousePressed() {
         }
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
+        frameCount = 0;
         titleScreen = true;
         invaderMode = false;
         gameOver = false;
@@ -228,6 +231,7 @@ void mousePressed() {
         score--;
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
+        frameCount = 0;
         titleScreen = true;
         invaderMode = false;
         gameOver = false;
@@ -251,24 +255,45 @@ void draw() {
 
   if (titleScreen) { // titleScreen
 
+      if (frameCount < 100) {
       pushMatrix();
-    translate(width/2, 370);
-    scale(14);
-    rotate(PI/4);
-    translate(-9, 0);
-    noStroke();
-    fill(255, 0, 0);
-    ellipse(0, 0, 10, 15);
-    fill(255);
-    beginShape();
-    vertex(-6, -4);
-    vertex(6, -4);
-    vertex(6, -20);
-    vertex(0, -26);
-    vertex(-6, -20);
-    endShape();
-    quad(-6, -4, 6, -4, 10, 0, -10, 0);
-    popMatrix();
+      translate(width/2, 370);
+      scale(14);
+      rotate(PI/4);
+      translate(-9 - (5 - 0.05*frameCount), 400 - 4*frameCount);
+      noStroke();
+      fill(255, 0, 0);
+      ellipse(0, 0, 10, 15);
+      fill(255);
+      beginShape();
+      vertex(-6, -4);
+      vertex(6, -4);
+      vertex(6, -20);
+      vertex(0, -26);
+      vertex(-6, -20);
+      endShape();
+      quad(-6, -4, 6, -4, 10, 0, -10, 0);
+      popMatrix();
+    } else {
+      pushMatrix();
+      translate(width/2, 370);
+      scale(14);
+      rotate(PI/4);
+      translate(-9, 0);
+      noStroke();
+      fill(255, 0, 0);
+      ellipse(0, 0, 10, 15);
+      fill(255);
+      beginShape();
+      vertex(-6, -4);
+      vertex(6, -4);
+      vertex(6, -20);
+      vertex(0, -26);
+      vertex(-6, -20);
+      endShape();
+      quad(-6, -4, 6, -4, 10, 0, -10, 0);
+      popMatrix();
+    }
 
     fill(255, 0, 0);
     textFont(font, 56);
@@ -641,7 +666,6 @@ void draw() {
       }
     }
   }
-  //println(gameOver);
 }
 
 class Rocket {
