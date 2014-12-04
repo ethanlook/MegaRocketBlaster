@@ -133,11 +133,11 @@ void mousePressed() {
         invaderMode = false;
       }
     } else {
-      if (mouseX > 275 && mouseX < 425 && mouseY > 435 && mouseY < 510) { // CLASSIC button on title screen
+      if (mouseX > 235 && mouseX < 465 && mouseY > 435 && mouseY < 510) { // CLASSIC button on title screen
         titleScreen = true;
         classicMode = true;
       }
-      if (mouseX > 275 && mouseX < 425 && mouseY > 535 && mouseY < 610) { // INVADER button on title screen
+      if (mouseX > 235 && mouseX < 465 && mouseY > 535 && mouseY < 610) { // INVADER button on title screen
         titleScreen = true;
         invaderMode = true;
       }
@@ -373,7 +373,7 @@ void draw() {
         text("MENU", 549, 655);
       }
     } else { // titleScreen && !classicMode && !invaderMode
-      if (mouseX > 275 && mouseX < 425 && mouseY > 435 && mouseY < 510) {
+      if (mouseX > 235 && mouseX < 465 && mouseY > 435 && mouseY < 510) {
         fill(255, 0, 0);
         stroke(255);
         strokeWeight(5);
@@ -390,7 +390,7 @@ void draw() {
         textFont(font, 35);
         text("CLASSIC", 278, 485);
       }
-      if (mouseX > 275 && mouseX < 425 && mouseY > 535 && mouseY < 610) {
+      if (mouseX > 235 && mouseX < 465 && mouseY > 535 && mouseY < 610) {
         fill(255, 0, 0);
         stroke(255);
         strokeWeight(5);
