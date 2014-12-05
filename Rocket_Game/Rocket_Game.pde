@@ -29,6 +29,7 @@ Minim minim;
 boolean titleScreen;
 boolean classicMode;
 boolean invaderMode;
+boolean sound;
 
 PImage galaxy;
 
@@ -70,6 +71,7 @@ void setup() {
   titleScreen = true;
   classicMode = false;
   invaderMode = false;
+  sound = true;
 
   galaxy = loadImage("galaxy.jpg");
   galaxy.loadPixels();
@@ -267,6 +269,15 @@ void mousePressed() {
           myPSys.remove(i);
         }
       }
+    }
+  }
+
+  if (mouseX > 600 && mouseX < 675 && mouseY > 505 && mouseY < 580) { // Sound button
+    sound = !sound;
+    if (sound) {
+      player.unmute();
+    } else {
+      player.mute();
     }
   }
 }
@@ -687,6 +698,22 @@ void draw() {
         }
       }
     }
+  }
+
+  if (mouseX > 600 && mouseX < 675 && mouseY > 505 && mouseY < 580) { // Sound button
+    fill(255, 0, 0);
+    stroke(255);
+    strokeWeight(5);
+    rect(600, 505, 75, 75, 15);
+    fill(255);
+    textFont(font, 35);
+  } else {
+    fill(#178DFF);
+    stroke(255);
+    strokeWeight(5);
+    rect(600, 505, 75, 75, 15);
+    fill(255);
+    textFont(font, 35);
   }
 }
 
