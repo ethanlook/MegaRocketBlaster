@@ -30,6 +30,8 @@ boolean titleScreen;
 boolean classicMode;
 boolean invaderMode;
 
+PImage galaxy;
+
 void setup() {
   size(700, 700);
   background(0);
@@ -68,6 +70,9 @@ void setup() {
   titleScreen = true;
   classicMode = false;
   invaderMode = false;
+
+  galaxy = loadImage("galaxy.jpg");
+  galaxy.loadPixels();
 }
 
 void stop() {
@@ -271,15 +276,18 @@ void draw() {
 
   if (titleScreen) { // titleScreen
 
-      if (frameCount < 100) {
+      galaxy.updatePixels();
+    image(galaxy, 0, 0);
+
+    if (frameCount < 100) {
       pushMatrix();
       translate(width/2, 370);
       scale(14);
       rotate(PI/4);
       translate(-9 - (5 - 0.05*frameCount), 400 - 4*frameCount);
       noStroke();
-      fill(255, 0, 0);
-      ellipse(0, 0, 10, 15);
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(8, 10), random(13, 15));
       fill(255);
       beginShape();
       vertex(-6, -4);
@@ -297,8 +305,8 @@ void draw() {
       rotate(PI/4);
       translate(-9, 0);
       noStroke();
-      fill(255, 0, 0);
-      ellipse(0, 0, 10, 15);
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(8, 10), random(13, 15));
       fill(255);
       beginShape();
       vertex(-6, -4);
@@ -459,7 +467,7 @@ void draw() {
         myRockets.get(i).drawRocket();
         myRockets.get(i).update(1.0);
         if (myRockets.get(i).checkIfScored()) {
-          myPSys.add(new PSys(100, new PVector(myRockets.get(i).x, myRockets.get(i).y, 0), 1));
+          myPSys.add(new PSys(100, new PVector(myRockets.get(i).x, myRockets.get(i).y, 0), 1, myRockets.get(i).rocketType));
           myRockets.remove(i); 
           counter--;
           myUFOs.add(new UFO());
@@ -469,7 +477,7 @@ void draw() {
       for (int i = myRockets.size ()-1; i >= 0; i--) {
         for (int j = myUFOs.size () - 1; j >= 0; j--) {
           if (myRockets.get(i).checkIfCrashed(myUFOs.get(j))) {
-            myPSys.add(new PSys(100, new PVector(myUFOs.get(j).x, myUFOs.get(j).y, 0), 0));
+            myPSys.add(new PSys(100, new PVector(myUFOs.get(j).x, myUFOs.get(j).y, 0), 0, myRockets.get(i).rocketType));
             myRockets.remove(i);
             counter--;
             myUFOs.remove(j);
@@ -568,7 +576,7 @@ void draw() {
       for (int i = myRockets.size ()-1; i >= 0; i--) {
         for (int j = myUFOInvaders.size () - 1; j >= 0; j--) {
           if (myRockets.get(i).checkIfCrashed(myUFOInvaders.get(j))) {
-            myPSys.add(new PSys(100, new PVector(myUFOInvaders.get(j).x, myUFOInvaders.get(j).y, 0), 0));
+            myPSys.add(new PSys(100, new PVector(myUFOInvaders.get(j).x, myUFOInvaders.get(j).y, 0), 0, myRockets.get(i).rocketType));
             myRockets.remove(i);
             counter--;
             myUFOInvaders.remove(j);
@@ -593,18 +601,20 @@ void draw() {
         if (timeStamp % 95 == 0) {
           myUFOInvaders.add(new UFOInvader());
         }
-      } else if (score >= 10 && score < 20) {
+      } else if (score < 20) {
         if (timeStamp % 70 == 0) {
           myUFOInvaders.add(new UFOInvader());
         }
-      } else if (score >= 20 && score < 30) {
+      } else if (score < 30) {
         if (timeStamp % 45 == 0) {
           myUFOInvaders.add(new UFOInvader());
         }
-      } else {
+      } else if (score < 100) {
         if (timeStamp % 20 == 0) {
           myUFOInvaders.add(new UFOInvader());
         }
+      } else {
+          myUFOInvaders.add(new UFOInvader());
       }
 
       timeStamp++;
@@ -683,12 +693,25 @@ void draw() {
 class Rocket {
   float x, y, velY;
   boolean hasPressed;
+  int rocketType;
 
   Rocket() {
     this.x = 0;
     this.y = height + 30;
-    velY = 1.0;
     hasPressed = false;
+    if (score < 10) {
+      rocketType = 0;
+      velY = 1.0;
+    } else if (score < 20) {
+      rocketType = 1;
+      velY = 1.1;
+    } else if (score < 30) {
+      rocketType = 2;
+      velY = 1.2;
+    } else {
+      rocketType = 3;
+      velY = 1.3;
+    }
   }
 
   void moveRocket(float x, float y) {
@@ -697,21 +720,75 @@ class Rocket {
   }
 
   void drawRocket() {
-    pushMatrix();
-    translate(x, y);
-    noStroke();
-    fill(255, 0, 0);
-    ellipse(0, 0, 10, 15);
-    fill(255);
-    beginShape();
-    vertex(-6, -4);
-    vertex(6, -4);
-    vertex(6, -20);
-    vertex(0, -26);
-    vertex(-6, -20);
-    endShape();
-    quad(-6, -4, 6, -4, 10, 0, -10, 0);
-    popMatrix();
+    if (rocketType == 0) {
+      pushMatrix();
+      translate(x, y);
+      noStroke();
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(8, 10), random(13, 15));
+      fill(255);
+      beginShape();
+      vertex(-6, -4);
+      vertex(6, -4);
+      vertex(6, -20);
+      vertex(0, -26);
+      vertex(-6, -20);
+      endShape();
+      quad(-6, -4, 6, -4, 10, 0, -10, 0);
+      popMatrix();
+    } else if (rocketType == 1) {
+      pushMatrix();
+      translate(x, y);
+      noStroke();
+      fill(255);
+      quad(-6, -4, 6, -4, 10, 0, -10, 0);
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(4, 6), random(13, 15));
+      fill(0, 0, 255);
+      beginShape();
+      vertex(-4, 0);
+      vertex(4, 0);
+      vertex(4, -20);
+      vertex(0, -26);
+      vertex(-4, -20);
+      endShape();
+      popMatrix();
+    } else if (rocketType == 2) {
+      pushMatrix();
+      translate(x, y);
+      noStroke();
+      fill(255);
+      quad(-5, -16, 5, -16, 10, 0, -10, 0);
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(6, 8), random(13, 15));
+      fill(0, 255, 0);
+      beginShape();
+      vertex(-5, 0);
+      vertex(5, 0);
+      vertex(5, -20);
+      vertex(0, -26);
+      vertex(-5, -20);
+      endShape();
+      fill(255);
+      triangle(3, -12, 0, -26, -3, -12);
+      popMatrix();
+    } else if (rocketType == 3) {
+      pushMatrix();
+      translate(x, y);
+      noStroke();
+      fill(random(150, 255), random(125), 0);
+      ellipse(0, 0, random(8, 10), random(13, 15));
+      fill(random(100, 255), random(100, 255), random(100, 255));
+      beginShape();
+      vertex(-6, -4);
+      vertex(6, -4);
+      vertex(6, -20);
+      vertex(0, -26);
+      vertex(-6, -20);
+      endShape();
+      quad(-6, -4, 6, -4, 10, 0, -10, 0);
+      popMatrix();
+    }
   }
 
   boolean checkIfScored() {
@@ -889,19 +966,26 @@ class Particle {
   PVector pcolor;
   int particleType;
 
-  Particle(PVector start, int particleType) {
+  Particle(PVector start, int particleType, int rocketType) {
     if (particleType == 0) {
       vel = new PVector(random(-2, 2), random(-6, 0), 0);
-      pcolor = new PVector(random(150, 255), random(125), 0);
       loc = start.get();
       r = 4.0;
       life = 40;
     } else if (particleType == 1) {
       vel = new PVector(random(-2, 2), random(6), 0);
-      pcolor = new PVector(random(150, 255), random(125), 0);
       loc = start.get();
       r = 4.0;
       life = 20;
+    }
+    if (rocketType == 0) {
+      pcolor = new PVector(random(150, 255), random(125), 0);
+    } else if (rocketType == 1) {
+      pcolor = new PVector(0, random(255), 255);
+    } else if (rocketType == 2) {
+      pcolor = new PVector(0, 255, random(255));
+    } else if (rocketType == 3) {
+      pcolor = new PVector(random(100, 255), random(100, 255), random(100, 255));
     }
   }  
 
@@ -939,11 +1023,11 @@ class PSys {
   ArrayList particles;
   PVector source;
 
-  PSys(int num, PVector init_loc, int particleType) {
+  PSys(int num, PVector init_loc, int particleType, int rocketType) {
     particles = new ArrayList();
     source = init_loc.get();
     for (int i=0; i < num; i++) {
-      particles.add(new Particle(source, particleType));
+      particles.add(new Particle(source, particleType, rocketType));
     }
   }
 
