@@ -10,7 +10,6 @@ float[] StarRadius;
 ArrayList<Rocket> myRockets;
 ArrayList<UFO> myUFOs;
 ArrayList<PSys> myPSys;
-ArrayList<PSysAst> myPSysAst;
 ArrayList<UFOInvader> myUFOInvaders;
 
 Trap myTrap;
@@ -58,7 +57,6 @@ void setup() {
   myRockets = new ArrayList<Rocket>();
   myUFOs = new ArrayList<UFO>();
   myPSys = new ArrayList<PSys>();
-  myPSysAst = new ArrayList<PSysAst>();
   myTrap = new Trap();
   myUFOInvaders = new ArrayList<UFOInvader>();
   gameOver = false; //for Invader Mode
@@ -153,6 +151,9 @@ void mousePressed() {
         for (int i = myUFOs.size () - 1; i >= 0; i--) {
           myUFOs.remove(i);
         }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
+        }
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
         frameCount = 0;
@@ -168,6 +169,9 @@ void mousePressed() {
         }
         for (int i = myRockets.size () - 1; i >= 0; i--) {
           myRockets.remove(i);
+        }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
         }
       }
     } else {
@@ -192,6 +196,9 @@ void mousePressed() {
         for (int i = myRockets.size () - 1; i >= 0; i--) {
           myRockets.remove(i);
         }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
+        }
       }
     }
   } else if (invaderMode) { 
@@ -204,6 +211,9 @@ void mousePressed() {
         lives = 10;
         for (int i = myUFOInvaders.size () - 1; i >= 0; i--) {
           myUFOInvaders.remove(i);
+        }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
         }
       }
       if (mouseX > 525 && mouseX < 675 && mouseY > 605 && mouseY < 680) {
@@ -220,6 +230,9 @@ void mousePressed() {
         }
         for (int i = myUFOInvaders.size () - 1; i >= 0; i--) {
           myUFOInvaders.remove(i);
+        }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
         }
       }
     } else {
@@ -244,6 +257,9 @@ void mousePressed() {
         }
         for (int i = myUFOInvaders.size () - 1; i >= 0; i--) {
           myUFOInvaders.remove(i);
+        }
+        for (int i = myPSys.size () - 1; i >= 0; i--) {
+          myPSys.remove(i);
         }
       }
     }
@@ -443,7 +459,7 @@ void draw() {
         myRockets.get(i).drawRocket();
         myRockets.get(i).update(1.0);
         if (myRockets.get(i).checkIfScored()) {
-          myPSysAst.add(new PSysAst(100, new PVector(myRockets.get(i).x, myRockets.get(i).y, 0)));
+          myPSys.add(new PSys(100, new PVector(myRockets.get(i).x, myRockets.get(i).y, 0), 1));
           myRockets.remove(i); 
           counter--;
           myUFOs.add(new UFO());
@@ -453,7 +469,7 @@ void draw() {
       for (int i = myRockets.size ()-1; i >= 0; i--) {
         for (int j = myUFOs.size () - 1; j >= 0; j--) {
           if (myRockets.get(i).checkIfCrashed(myUFOs.get(j))) {
-            myPSys.add(new PSys(100, new PVector(myUFOs.get(j).x, myUFOs.get(j).y, 0)));
+            myPSys.add(new PSys(100, new PVector(myUFOs.get(j).x, myUFOs.get(j).y, 0), 0));
             myRockets.remove(i);
             counter--;
             myUFOs.remove(j);
@@ -462,10 +478,6 @@ void draw() {
             break;
           }
         }
-      }
-
-      for (int i = 0; i < myPSysAst.size (); i++) {
-        myPSysAst.get(i).run();
       }
 
       for (int i = 0; i < myPSys.size (); i++) {
@@ -556,7 +568,7 @@ void draw() {
       for (int i = myRockets.size ()-1; i >= 0; i--) {
         for (int j = myUFOInvaders.size () - 1; j >= 0; j--) {
           if (myRockets.get(i).checkIfCrashed(myUFOInvaders.get(j))) {
-            myPSys.add(new PSys(100, new PVector(myUFOInvaders.get(j).x, myUFOInvaders.get(j).y, 0)));
+            myPSys.add(new PSys(100, new PVector(myUFOInvaders.get(j).x, myUFOInvaders.get(j).y, 0), 0));
             myRockets.remove(i);
             counter--;
             myUFOInvaders.remove(j);
@@ -875,13 +887,22 @@ class Particle {
   float r;
   float life;
   PVector pcolor;
+  int particleType;
 
-  Particle(PVector start) {
-    vel = new PVector(random(-2, 2), random(-6, 0), 0);
-    pcolor = new PVector(random(150, 255), random(125), 0);
-    loc = start.get();
-    r = 4.0;
-    life = 40;
+  Particle(PVector start, int particleType) {
+    if (particleType == 0) {
+      vel = new PVector(random(-2, 2), random(-6, 0), 0);
+      pcolor = new PVector(random(150, 255), random(125), 0);
+      loc = start.get();
+      r = 4.0;
+      life = 40;
+    } else if (particleType == 1) {
+      vel = new PVector(random(-2, 2), random(6), 0);
+      pcolor = new PVector(random(150, 255), random(125), 0);
+      loc = start.get();
+      r = 4.0;
+      life = 20;
+    }
   }  
 
   void run() {
@@ -918,95 +939,17 @@ class PSys {
   ArrayList particles;
   PVector source;
 
-  PSys(int num, PVector init_loc) {
+  PSys(int num, PVector init_loc, int particleType) {
     particles = new ArrayList();
     source = init_loc.get();
     for (int i=0; i < num; i++) {
-      particles.add(new Particle(source));
+      particles.add(new Particle(source, particleType));
     }
   }
 
   void run() {
     for (int i=particles.size ()-1; i >=0; i--) {
       Particle p = (Particle) particles.get(i);
-      p.run();
-      if ( !p.alive()) {
-        particles.remove(i);
-      }
-    }
-  }
-
-  boolean dead() {
-    if (particles.isEmpty() ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-class ParticleAst {
-
-  PVector loc;
-  PVector vel;
-  PVector accel;
-  float r;
-  float life;
-  PVector pcolor;
-
-  ParticleAst(PVector start) {
-    vel = new PVector(random(-2, 2), random(6), 0);
-    pcolor = new PVector(random(150, 255), random(125), 0);
-    loc = start.get();
-    r = 4.0;
-    life = 20;
-  }  
-
-  void run() {
-    updateP();
-    renderP();
-  }
-
-  void updateP() {
-    loc.add(vel);
-    life -= 1.0;
-  }
-
-  void renderP() {
-    pushMatrix();
-    ellipseMode(CENTER);
-    noStroke();
-    fill(pcolor.x, pcolor.y, pcolor.z);
-    translate(loc.x, loc.y);
-    ellipse(0, 0, r, r);
-    popMatrix();
-  }
-
-  boolean alive() {
-    if (life <= 0.0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-} 
-
-class PSysAst {
-
-  ArrayList particles;
-  PVector source;
-
-  PSysAst(int num, PVector init_loc) {
-    particles = new ArrayList();
-    source = init_loc.get();
-    for (int i=0; i < num; i++) {
-      particles.add(new ParticleAst(source));
-    }
-  }
-
-  void run() {
-    for (int i=particles.size ()-1; i >=0; i--) {
-      ParticleAst p = (ParticleAst) particles.get(i);
       p.run();
       if ( !p.alive()) {
         particles.remove(i);
