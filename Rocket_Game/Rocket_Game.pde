@@ -32,6 +32,7 @@ boolean invaderMode;
 boolean sound;
 
 PImage galaxy;
+PImage soundImg;
 
 void setup() {
   size(700, 700);
@@ -75,6 +76,9 @@ void setup() {
 
   galaxy = loadImage("galaxy.jpg");
   galaxy.loadPixels();
+
+  soundImg = loadImage("sound.png");
+  soundImg.loadPixels();
 }
 
 void stop() {
@@ -714,6 +718,13 @@ void draw() {
     rect(600, 505, 75, 75, 15);
     fill(255);
     textFont(font, 35);
+  }
+  soundImg.updatePixels();
+  image(soundImg, 605, 510);
+  if (!sound) {
+    stroke(0);
+    strokeWeight(5);
+    line(620, 560, 655, 525);
   }
 }
 
