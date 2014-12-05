@@ -65,7 +65,7 @@ void setup() {
 
     minim = new Minim(this);
   player = minim.loadFile("John Williams - Star Wars Main Theme (FULL).mp3", 2048);
-//  player.play();
+  player.play();
 
   titleScreen = true;
   classicMode = false;
@@ -275,8 +275,8 @@ void draw() {
   background(0);
 
   if (titleScreen) { // titleScreen
-
-      galaxy.updatePixels();
+    background(12, 12, 12);
+    galaxy.updatePixels();
     image(galaxy, 0, 0);
 
     if (frameCount < 100) {
@@ -614,7 +614,7 @@ void draw() {
           myUFOInvaders.add(new UFOInvader());
         }
       } else {
-          myUFOInvaders.add(new UFOInvader());
+        myUFOInvaders.add(new UFOInvader());
       }
 
       timeStamp++;
@@ -1000,13 +1000,15 @@ class Particle {
   }
 
   void renderP() {
-    pushMatrix();
-    ellipseMode(CENTER);
-    noStroke();
-    fill(pcolor.x, pcolor.y, pcolor.z);
-    translate(loc.x, loc.y);
-    ellipse(0, 0, r, r);
-    popMatrix();
+    if (loc.x < 500) {
+      pushMatrix();
+      ellipseMode(CENTER);
+      noStroke();
+      fill(pcolor.x, pcolor.y, pcolor.z);
+      translate(loc.x, loc.y);
+      ellipse(0, 0, r, r);
+      popMatrix();
+    }
   }
 
   boolean alive() {
