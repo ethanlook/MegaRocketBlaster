@@ -42,7 +42,7 @@ void setup() {
 
   lives = 10;
 
-  numStars = 30;
+  numStars = 300;
 
   timeStamp = 0;
 
@@ -53,7 +53,7 @@ void setup() {
   for (int i = 0; i<numStars; i++) {
     StarX[i] = random(0, 480);
     StarY[i] = random(0, 700);
-    StarRadius[i] = random(0, 10);
+    StarRadius[i] = random(2);
   }
 
   myRockets = new ArrayList<Rocket>();
@@ -65,7 +65,7 @@ void setup() {
 
     minim = new Minim(this);
   player = minim.loadFile("John Williams - Star Wars Main Theme (FULL).mp3", 2048);
-  player.play();
+//  player.play();
 
   titleScreen = true;
   classicMode = false;
@@ -81,13 +81,13 @@ void stop() {
   super.stop();
 }
 
-void drawStar(float x, float y, float radius) {
-  fill(255, 255, 0);
+void drawStar(float x, float y, float radius, float opacity) {
+  fill(215, 215, 255, opacity);
   noStroke();
   float cx, cy, theta, cradius;
   cx = cy = theta = cradius = 0;
   beginShape();
-  for (int i=0; i<10; i++) {
+  for (int i=0; i<30; i++) {
     if (i%2 == 0) {
       cradius = radius;
     } else {
@@ -96,7 +96,7 @@ void drawStar(float x, float y, float radius) {
     cx = x + cradius*cos(theta);
     cy = y + cradius*sin(theta);
 
-    theta += TWO_PI/10;
+    theta += TWO_PI/30;
 
     vertex(cx, cy);
   } 
@@ -460,7 +460,7 @@ void draw() {
   } else { 
     if (classicMode) { // !titleScreen && classicMode
       for (int i = 0; i<numStars; i++) {
-        drawStar(StarX[i], StarY[i], StarRadius[i]);
+        drawStar(StarX[i], StarY[i], StarRadius[i], random(50, 120));
       }
 
       for (int i = 0; i < myRockets.size (); i++) {
@@ -565,7 +565,7 @@ void draw() {
     }
     if (invaderMode) {
       for (int i = 0; i<numStars; i++) {
-        drawStar(StarX[i], StarY[i], StarRadius[i]);
+        drawStar(StarX[i], StarY[i], StarRadius[i], random(50, 120));
       }
 
       for (int i = 0; i < myRockets.size (); i++) {
